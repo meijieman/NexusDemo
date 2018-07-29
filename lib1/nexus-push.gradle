@@ -1,0 +1,74 @@
+apply plugin: 'maven'
+
+def RELEASE_REPOSITORY_URL = 'http://127.0.0.1:8081/repository/android-release/' // 服务端ip地址端口及放置的目录
+def SNAPSHOT_REPOSITORY_URL = 'http://127.0.0.1:8081/repository/maven-snapshots/' // 服务端ip地址端口及放置的目录
+def ACCOUNT = 'admin'
+def PASSWORD = 'admin123'
+def ARTIFACT_ID = 'lib1'  // artifactId
+def VERSION_NAME = '1.0.6-SNAPSHOT' // version
+def GROUP_ID = 'com.major'  // groupId
+def PROJECT_NAME = 'lib1'
+
+//脚本：将Lib打成aar包上传至maven私有库
+uploadArchives {
+    repositories {
+        mavenDeployer {
+
+            repository(url: (VERSION_NAME.toUpperCase().contains("SNAPSHOT") ? SNAPSHOT_REPOSITORY_URL : RELEASE_REPOSITORY_URL)) {
+                authentication(userName: ACCOUNT, password: PASSWORD)
+            }
+
+            pom.project {
+                name PROJECT_NAME
+                groupId GROUP_ID
+                artifactId ARTIFACT_ID
+                version VERSION_NAME
+                packaging 'aar'
+                description 'dependences lib1 ，依赖包'
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+            }
+        }
+    }
+}
+
+//javadoc {
+//    options{
+//        encoding 'UTF-8'
+//        charSet 'UTF-8'
+//        author true
+//    }
+//}
+
+task androidJavadocs(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+    classifier = 'javadoc'
+    from androidJavadocs.destinationDir
+}
+
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+//解决 JavaDoc 中文注释生成失败的问题
+tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}
+
+artifacts {
+    archives androidSourcesJar
+//    archives androidJavadocsJar
+}
+
