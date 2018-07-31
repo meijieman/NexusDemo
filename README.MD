@@ -46,9 +46,11 @@ gradlew 模块名：dependencies
 
 参考资料
 https://blog.csdn.net/qq_32452623/article/details/79385595
+https://blog.csdn.net/jf_1994/article/details/51228560
 
+gradle 统一依赖管理
 
- compile 'advertise:advertise-release:0.1@aar'
+compile 'advertise:advertise-release:0.1@aar'
 
 
 
@@ -57,6 +59,5 @@ https://blog.csdn.net/qq_32452623/article/details/79385595
 
 
 
- C:\Users\Major\.gradle\caches\modules-2\files-2.1\com.major\lib1\1.0.6-SNAPSHOT
-
- C:\Users\Major\.gradle\caches\transforms-1\files-1.1\lib2-1.0.1-SNAPSHOT.aar
+C:\Users\Major\.gradle\caches\modules-2\files-2.1\com.major\lib1\1.0.6-SNAPSHOT
+C:\Users\Major\.gradle\caches\transforms-1\files-1.1\lib2-1.0.1-SNAPSHOT.aar
